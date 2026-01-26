@@ -26,6 +26,14 @@ Cypress.Commands.add('openMenu', () => {
     cy.get('#react-burger-menu-btn').click();
 });
 
+Cypress.Commands.add("openMenuIfClosed", () => {
+  cy.get(".bm-menu-wrap").then(($menu) => {
+    if ($menu.attr("aria-hidden") === "true") {
+      cy.openMenu();
+    }
+  });
+});
+
 Cypress.Commands.add('addToCartByIndex', (index: number) => {
 cy.get('.btn_inventory').eq(index).click();
 });
@@ -48,6 +56,7 @@ declare global {
       login(email: string, password: string): Chainable<void>,
       getSortingOptions(): Chainable<string[]>;
       openMenu(): Chainable<void>;
+      openMenuIfClosed(): Chainable<void>;
       addToCartByIndex(index: number): Chainable<void>;
     //   drag(subject: string, options?: Partial<TypeOptions>): Chainable<Element>
     //   dismiss(subject: string, options?: Partial<TypeOptions>): Chainable<Element>

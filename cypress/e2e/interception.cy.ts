@@ -28,7 +28,10 @@ describe("API tests", () => {
 
   it("Mock bad requests error 400", () => {
     cy.visit("https://pu5hds6usi.execute-api.us-east-1.amazonaws.com/mocks");
-    cy.intercept("GET", executeUrl, { statusCode: 400 }).as("getData");
+    cy.intercept("GET", executeUrl, {
+    statusCode: 400,
+    body:  "Bad request",
+  }).as("getData");
 
     cy.get("#fetchBtn").click();
     cy.wait("@getData").then((interception) => {
@@ -40,7 +43,10 @@ describe("API tests", () => {
 
   it("Mock bad requests error 404", () => {
     cy.visit("https://pu5hds6usi.execute-api.us-east-1.amazonaws.com/mocks");
-    cy.intercept("GET", executeUrl, { statusCode: 404 }).as("getData");
+   cy.intercept("GET", executeUrl, {
+    statusCode: 404,
+    body:  "Not found",
+  }).as("getData");
 
     cy.get("#fetchBtn").click();
     cy.wait("@getData").then((interception) => {
@@ -52,7 +58,10 @@ describe("API tests", () => {
 
   it("Mock bad requests error 401", () => {
     cy.visit("https://pu5hds6usi.execute-api.us-east-1.amazonaws.com/mocks");
-    cy.intercept("GET", executeUrl, { statusCode: 401 }).as("getData");
+    cy.intercept("GET", executeUrl, {
+    statusCode: 401,
+    body:  "Unauthorized",
+  }).as("getData");
 
     cy.get("#fetchBtn").click();
     cy.wait("@getData").then((interception) => {

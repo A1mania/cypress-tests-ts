@@ -24,9 +24,10 @@ describe('open Swag Labs', () => {
   });
 
   it("burger menu opens on product page", () => {
-    cy.openMenu();
-    cy.get('.bm-menu').should('be.visible');
-  });
+    cy.openMenuIfClosed();
+    cy.get(".bm-menu-wrap")
+    .should("have.attr", "aria-hidden", "false");
+});
 
     it("check counter appears on cart icon when add item to cart", async () => {
     cy.addToCartByIndex(0);
