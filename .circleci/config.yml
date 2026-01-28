@@ -23,8 +23,11 @@ jobs:
             mkdir -p cypress-report
 
       - run:
-          name: Run Cypress tests
-          command: npx cypress run
+          name: Run Cypress tests (JUnit)
+          command: |
+            npx cypress run \
+             --reporter junit \
+             --reporter-options "mochaFile=test-results/junit-[hash].xml,toConsole=true"
           no_output_timeout: 10m
           when: always
 
