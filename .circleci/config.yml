@@ -26,24 +26,26 @@ jobs:
           name: Run Cypress tests (JUnit + Mochawesome)
           command: |
             npx cypress run \
-            --reporter mocha-multi-reporters \
-            --reporter-options "configFile=mocha-reporters.json"
+              --reporter mocha-multi-reporters \
+              --reporter-options "configFile=mocha-reporters.json"
           no_output_timeout: 10m
           when: always
 
       - run:
-           name: Generate Mochawesome HTML
-           command: |
-                  npx mochawesome-merge "cypress-report/*.json" -o cypress-report/merged.json
-                  npx marge cypress-report/merged.json -f index -o cypress-report
-           when: always   
+          name: Generate Mochawesome HTML
+          command: |
+            npx mochawesome-merge "cypress-report/*.json" -o cypress-report/merged.json
+            npx marge cypress-report/merged.json -f index -o cypress-report
+          when: always
 
       - run:
-         name: Debug report files
-        command: |
-          echo "=== cypress-report ==="
-          ls -la cypress-report || true
-        when: always      
+          name: Debug report files
+          command: |
+            echo "=== cypress-report ==="
+            ls -la cypress-report || true
+            echo "=== test-results ==="
+            ls -la test-results || true
+          when: always
 
       - persist_to_workspace:
           root: .
