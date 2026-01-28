@@ -9,34 +9,24 @@ jobs:
       - run:
           name: Install dependencies
           command: npm ci
-
-      - save_cache:
-          key: node-deps-{{ checksum "package-lock.json" }}
-          paths:
-            - node_modules
-      - run:
-          name: Prepare results folders
-          command: |
-            mkdir -p test-results
-            mkdir -p cypress-report
-
-      - persist_to_workspace:
-          root: .
-          paths:
-            - .
-
       - run:
           name: Run Cypress tests
           command: npx cypress run
-          
       - persist_to_workspace:
           root: .
           paths:
             - cypress-report
             - test-results
-      
-      - store_test_results:
-          path: test-results
+
+  report:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - attach_workspace:
+          at: .
+      - store_artifacts:
+          path: cypress-report
+          destination: cypress-report
 
 workflows:
   cypress-workflow:
@@ -45,25 +35,3 @@ workflows:
       - report:
           requires:
             - cypress-tests
-
-report:
-    docker:
-      - image: cimg/base:stable
-    resource_class: small
-    steps:
-      - attach_workspace:
-          at: .
-      
-      - store_artifacts:
-          path: cypress-report/
-          destination: cypress-report
-      
-      - run:
-          name: Display report URL
-          command: |
-            echo "📊 Test Report is available at:"
-            echo "https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/0/cypress-report/index.html"
-          when: always
-
-          
-
