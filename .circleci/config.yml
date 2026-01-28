@@ -23,16 +23,20 @@ jobs:
             mkdir -p cypress-report
 
       - run:
-          name: Run Cypress tests (Mochawesome HTML)
+          name: Run Cypress tests (JUnit + Mochawesome)
           command: |
             npx cypress run \
-            --reporter mochawesome \
-            --reporter-options "reportDir=cypress-report,overwrite=false,html=false,json=true"
-
-            npx mochawesome-merge "cypress-report/*.json" > cypress-report/merged.json
-            npx marge cypress-report/merged.json -f index -o cypress-report
+            --reporter mocha-multi-reporters \
+            --reporter-options "configFile=mocha-reporters.json"
           no_output_timeout: 10m
           when: always
+
+      - run:
+           name: Generate Mochawesome HTML
+           command: |
+                  npx mochawesome-merge "cypress-report/*.json" > cypress-report/merged.json
+                  npx marge cypress-report/merged.json -f index -o cypress-report
+           when: always    
 
       - persist_to_workspace:
           root: .

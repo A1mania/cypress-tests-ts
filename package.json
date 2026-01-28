@@ -11,6 +11,7 @@
   "devDependencies": {
     "@types/node": "^25.0.10",
     "cypress": "^15.9.0",
+    "mocha-multi-reporters": "^1.5.1",
     "mochawesome": "^7.1.4",
     "mochawesome-merge": "^4.4.1",
     "mochawesome-report-generator": "^6.3.2",
