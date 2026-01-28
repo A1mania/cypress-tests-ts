@@ -41,9 +41,6 @@ jobs:
       - run:
           name: Debug report files
           command: |
-            echo "=== cypress-report ==="
-            ls -la cypress-report || true
-            echo "=== test-results ==="
             ls -la test-results || true
           when: always
 

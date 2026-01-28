@@ -1,6 +1,6 @@
 {
-  "reporterEnabled": "junit, mochawesome",
-  "junitReporterOptions": {
+  "reporterEnabled": "mocha-junit-reporter, mochawesome",
+  "mochaJunitReporterReporterOptions": {
     "mochaFile": "test-results/junit-[hash].xml",
     "toConsole": true
   },
