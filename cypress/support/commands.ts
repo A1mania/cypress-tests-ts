@@ -12,7 +12,7 @@
 //
 // -- This is a parent command --
 Cypress.Commands.add('login', (email: string, password: string) => { 
-    cy.get('#user-name').type(email); 
+    cy.get('#user-name').should('be.visible').type(email); 
     cy.get('#password').type(password); 
     cy.get('#login-button').click(); })
 
