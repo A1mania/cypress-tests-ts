@@ -17,3 +17,23 @@ workflows:
   cypress-workflow:
     jobs:
       - cypress-tests
+
+report:
+    docker:
+      - image: cimg/base:stable
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: .
+      
+      - store_artifacts:
+          path: cypress-report/
+          destination: cypress-report
+      
+      - run:
+          name: Display report URL
+          command: |
+            echo "📊 Test Report is available at:"
+            echo "https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/0/cypress-report/index.html"
+          when: always
+
