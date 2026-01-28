@@ -42,7 +42,7 @@ workflows:
   cypress-workflow:
     jobs:
       - cypress-tests
-        - report:
+      - report:
           requires:
             - cypress-tests
 
