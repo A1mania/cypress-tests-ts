@@ -14,12 +14,17 @@ jobs:
           key: node-deps-{{ checksum "package-lock.json" }}
           paths:
             - node_modules
-      
+      - run:
+          name: Prepare results folders
+          command: |
+            mkdir -p test-results
+            mkdir -p cypress-report
+
       - persist_to_workspace:
           root: .
           paths:
             - .
-                
+
       - run:
           name: Run Cypress tests
           command: npx cypress run
@@ -37,6 +42,9 @@ workflows:
   cypress-workflow:
     jobs:
       - cypress-tests
+        - report:
+          requires:
+            - cypress-tests
 
 report:
     docker:
@@ -57,5 +65,5 @@ report:
             echo "https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/0/cypress-report/index.html"
           when: always
 
-          # 
+          
 
