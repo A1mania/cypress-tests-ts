@@ -34,48 +34,31 @@ jobs:
       - run:
           name: Generate Mochawesome HTML
           command: |
-            npx mochawesome-merge "cypress-report/*.json" -o cypress-report/merged.json
-            npx marge cypress-report/merged.json -f index -o cypress-report
+            if ls cypress-report/*.json 1> /dev/null 2>&1; then
+              npx mochawesome-merge "cypress-report/*.json" -o cypress-report/merged.json
+              npx marge cypress-report/merged.json -f index -o cypress-report
+            else
+              echo "No mochawesome JSON files found in cypress-report/"
+            fi
           when: always
 
       - run:
           name: Debug report files
           command: |
+            echo "=== cypress-report ==="
+            ls -la cypress-report || true
+            echo "=== test-results ==="
             ls -la test-results || true
           when: always
-
-      - persist_to_workspace:
-          root: .
-          paths:
-            - cypress-report
-            - test-results
-
-      - store_test_results:
-          path: test-results
-
-  report:
-    docker:
-      - image: cimg/base:stable
-    resource_class: small
-    steps:
-      - attach_workspace:
-          at: .
 
       - store_artifacts:
           path: cypress-report
           destination: cypress-report
 
-      - run:
-          name: Display report URL
-          command: |
-            echo "📊 Test Report is available at:"
-            echo "https://output.circle-artifacts.com/output/job/${CIRCLE_WORKFLOW_JOB_ID}/artifacts/0/cypress-report/index.html"
-          when: always
+      - store_test_results:
+          path: test-results
 
 workflows:
   cypress-workflow:
     jobs:
       - cypress-tests
-      - report:
-          requires:
-            - cypress-tests
