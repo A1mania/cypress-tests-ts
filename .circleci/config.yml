@@ -1,8 +1,17 @@
-version: 2.1
-orbs: 
-   cypress: cypress-io/cypress@1
+jobs:
+  cypress-tests:
+    docker:
+      - image: cypress/browsers:node18.12.0-chrome107
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - run:
+          name: Run Cypress tests
+          command: npx cypress run
+
 workflows:
-  build:
-     jobs: 
-       - cypress/run   
-# 
+  cypress-workflow:
+    jobs:
+      - cypress-tests
