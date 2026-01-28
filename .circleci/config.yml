@@ -12,14 +12,14 @@ jobs:
       - run:
           name: Run Cypress tests
           command: npx cypress run
+
       - persist_to_workspace:
           root: .
           paths:
             - cypress-report
-            - test-results
-      
+             
       - store_test_results:
-          path: test-results
+          path: cypress-report
 
 workflows:
   cypress-workflow:
