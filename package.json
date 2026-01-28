@@ -1,0 +1,17 @@
+{
+  "name": "cypress-tests-ts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx cypress run"
+  },
+  "author": "anna",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "^25.0.10",
+    "cypress": "^15.9.0",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
+  }
+}
