@@ -34,9 +34,16 @@ jobs:
       - run:
            name: Generate Mochawesome HTML
            command: |
-                  npx mochawesome-merge "cypress-report/*.json" > cypress-report/merged.json
+                  npx mochawesome-merge "cypress-report/*.json" -o cypress-report/merged.json
                   npx marge cypress-report/merged.json -f index -o cypress-report
-           when: always    
+           when: always   
+
+      - run:
+         name: Debug report files
+        command: |
+          echo "=== cypress-report ==="
+          ls -la cypress-report || true
+        when: always      
 
       - persist_to_workspace:
           root: .
