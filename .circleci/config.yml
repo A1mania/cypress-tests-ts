@@ -9,17 +9,29 @@ jobs:
       - run:
           name: Install dependencies
           command: npm ci
+
+      - save_cache:
+          key: node-deps-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+      
+      - persist_to_workspace:
+          root: .
+          paths:
+            - .
+                
       - run:
           name: Run Cypress tests
           command: npx cypress run
-
+          
       - persist_to_workspace:
           root: .
           paths:
             - cypress-report
-             
+            - test-results
+      
       - store_test_results:
-          path: cypress-report
+          path: test-results
 
 workflows:
   cypress-workflow:
