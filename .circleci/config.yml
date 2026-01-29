@@ -13,13 +13,14 @@ jobs:
   cypress-tests:
     docker:
       - image: cypress/browsers:node18.12.0-chrome107
+
     steps:
       - checkout
 
       - restore_cache:
-    keys:
-      - node-deps-{{ checksum "package-lock.json" }}
-      - node-deps-
+          keys:
+            - node-deps-{{ checksum "package-lock.json" }}
+            - node-deps-
 
       - run:
           name: Install dependencies
