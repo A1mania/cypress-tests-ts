@@ -91,9 +91,6 @@ workflows:
               ignore:
                 - main
                 - master
-            pull_requests:
-              only:
-                - main
 
   scheduled-tests:
     triggers:
