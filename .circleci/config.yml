@@ -1,5 +1,14 @@
 version: 2.1
 
+parameters:
+  scope:
+    type: enum
+    enum: ["api", "e2e", "full"]
+    default: "full"
+  run_args:
+    type: string
+    default: ""
+
 jobs:
   cypress-tests:
     docker:
