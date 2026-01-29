@@ -16,6 +16,11 @@ jobs:
     steps:
       - checkout
 
+      - restore_cache:
+    keys:
+      - node-deps-{{ checksum "package-lock.json" }}
+      - node-deps-
+
       - run:
           name: Install dependencies
           command: npm ci
@@ -68,6 +73,35 @@ jobs:
           path: test-results
 
 workflows:
-  cypress-workflow:
+  test-on-push:
+    jobs:
+      - cypress-tests:
+          filters:
+            branches:
+              only:
+                - main
+                - master
+
+  test-on-pr:
+    jobs:
+      - cypress-tests:
+          filters:
+            branches:
+              ignore:
+                - main
+                - master
+            pull_requests:
+              only:
+                - main
+
+  scheduled-tests:
+    triggers:
+      - schedule:
+          cron: "0 8 * * *"
+          filters:
+            branches:
+              only:
+                - main
+                - master
     jobs:
       - cypress-tests
