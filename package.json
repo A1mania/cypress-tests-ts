@@ -3,13 +3,17 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  
   "scripts": {
-    "test": "npx cypress run"
+    "test": "npx cypress run --env allure=true",
+    "posttest": "npx allure generate allure-results --clean -o allure-report && allure open allure-report"
   },
   "author": "anna",
   "license": "ISC",
   "devDependencies": {
+    "@shelex/cypress-allure-plugin": "^2.41.2",
     "@types/node": "^25.0.10",
+    "allure-commandline": "^2.36.0",
     "cypress": "^15.9.0",
     "mocha-junit-reporter": "^2.2.1",
     "mocha-multi-reporters": "^1.5.1",
