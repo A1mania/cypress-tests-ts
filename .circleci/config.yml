@@ -1,0 +1,105 @@
+version: 2.1
+
+parameters:
+  scope:
+    type: enum
+    enum: ["api", "e2e", "full"]
+    default: "full"
+  run_args:
+    type: string
+    default: ""
+
+jobs:
+  cypress-tests:
+    docker:
+      - image: cypress/browsers:node18.12.0-chrome107
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - node-deps-{{ checksum "package-lock.json" }}
+            - node-deps-
+
+      - run:
+          name: Install dependencies
+          command: npm ci
+
+      - save_cache:
+          key: node-deps-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+
+      - run:
+          name: Prepare results folders
+          command: |
+            mkdir -p test-results
+            mkdir -p cypress-report
+
+      - run:
+          name: Run Cypress tests (JUnit + Mochawesome)
+          command: |
+            npx cypress run \
+              --reporter mocha-multi-reporters \
+              --reporter-options "configFile=mocha-reporters.json"
+          no_output_timeout: 10m
+          when: always
+
+      - run:
+          name: Generate Mochawesome HTML
+          command: |
+            if ls cypress-report/*.json 1> /dev/null 2>&1; then
+              npx mochawesome-merge "cypress-report/*.json" -o cypress-report/merged.json
+              npx marge cypress-report/merged.json -f index -o cypress-report
+            else
+              echo "No mochawesome JSON files found in cypress-report/"
+            fi
+          when: always
+
+      - run:
+          name: Debug report files
+          command: |
+            echo "=== cypress-report ==="
+            ls -la cypress-report || true
+            echo "=== test-results ==="
+            ls -la test-results || true
+          when: always
+
+      - store_artifacts:
+          path: cypress-report
+          destination: cypress-report
+
+      - store_test_results:
+          path: test-results
+
+workflows:
+  test-on-push:
+    jobs:
+      - cypress-tests:
+          filters:
+            branches:
+              only:
+                - main
+                - master
+
+  test-on-pr:
+    jobs:
+      - cypress-tests:
+          filters:
+            branches:
+              ignore:
+                - main
+                - master
+
+  scheduled-tests:
+    triggers:
+      - schedule:
+          cron: "0 8 * * *"
+          filters:
+            branches:
+              only:
+                - main
+                - master
+    jobs:
+      - cypress-tests
